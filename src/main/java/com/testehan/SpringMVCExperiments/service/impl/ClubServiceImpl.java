@@ -1,6 +1,7 @@
 package com.testehan.SpringMVCExperiments.service.impl;
 
 import com.testehan.SpringMVCExperiments.dto.ClubDTO;
+import com.testehan.SpringMVCExperiments.mapper.ClubMapper;
 import com.testehan.SpringMVCExperiments.model.Club;
 import com.testehan.SpringMVCExperiments.repository.ClubRepository;
 import com.testehan.SpringMVCExperiments.service.ClubService;
@@ -23,22 +24,22 @@ public class ClubServiceImpl implements ClubService
     @Override
     public List<ClubDTO> findAllClubs() {
         List<Club> allClubs =  clubRepository.findAll();
-        return allClubs.stream().map((club)-> mapToClubDTO(club)).collect(Collectors.toList());
+        return allClubs.stream().map((club)-> ClubMapper.mapToClubDTO(club)).collect(Collectors.toList());
     }
 
     @Override
     public Club save(ClubDTO clubDTO) {
-        return clubRepository.save(mapToClub(clubDTO));
+        return clubRepository.save(ClubMapper.mapToClub(clubDTO));
     }
 
     @Override
     public ClubDTO findClubById(Long clubId) {
-        return mapToClubDTO(clubRepository.findById(clubId).get());
+        return ClubMapper.mapToClubDTO(clubRepository.findById(clubId).get());
     }
 
     @Override
     public void updateClub(ClubDTO clubDTO) {
-        Club club = mapToClub(clubDTO);
+        Club club = ClubMapper.mapToClub(clubDTO);
         clubRepository.save(club);
     }
 
@@ -50,29 +51,7 @@ public class ClubServiceImpl implements ClubService
     @Override
     public List<ClubDTO> searchClubs(String keyword) {
         List<Club> clubsFound = clubRepository.searchClubs(keyword);
-        return clubsFound.stream().map((club)-> mapToClubDTO(club)).collect(Collectors.toList());
+        return clubsFound.stream().map((club)-> ClubMapper.mapToClubDTO(club)).collect(Collectors.toList());
     }
 
-    private Club mapToClub(ClubDTO clubDTO) {
-        return Club.builder()
-                .id(clubDTO.getId())
-                .title(clubDTO.getTitle())
-                .photoUrl(clubDTO.getPhotoUrl())
-                .content(clubDTO.getContent())
-                .createdOn(clubDTO.getCreatedOn())
-                .updatedOn(clubDTO.getUpdatedOn())
-                .build();
-    }
-
-    private ClubDTO mapToClubDTO(Club club) {
-        return ClubDTO.builder()
-                .id(club.getId())
-                .title(club.getTitle())
-                .photoUrl(club.getPhotoUrl())
-                .content(club.getContent())
-                .createdOn(club.getCreatedOn())
-                .updatedOn(club.getUpdatedOn())
-                .build();
-
-    }
 }

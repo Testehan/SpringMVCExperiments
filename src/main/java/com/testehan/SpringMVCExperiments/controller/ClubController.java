@@ -79,9 +79,10 @@ public class ClubController {
     @PostMapping("/clubs/{clubId}/edit")
     public String postEditClubForm(@PathVariable("clubId")Long clubId,
                                    @Valid @ModelAttribute("club") ClubDTO clubDTO,  // @Valid will validate object based on annotations from ClubDTO class
-                                   BindingResult result)
+                                   BindingResult result,Model model)
     {
         if (result.hasErrors()){
+            model.addAttribute("club", clubDTO);
             return "clubs-edit";
         }
         clubDTO.setId(clubId);

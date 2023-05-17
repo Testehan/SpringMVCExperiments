@@ -16,6 +16,7 @@ public interface ClubRepository extends JpaRepository<Club, Long> {
     // this will generate a Query with 2 fields...TODO test this out if it works..
     Optional<Club> findByTitleAndContent(String title,String content);
 
+    // TODO this search functionality works if the keyword matches the exact case. This should work with ignore case
     @Query("SELECT c from Club c WHERE c.title LIKE CONCAT('%', :keyword, '%')")
     List<Club> searchClubs(String keyword);
 

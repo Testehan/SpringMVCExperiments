@@ -9,6 +9,8 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -30,5 +32,8 @@ public class Club {
 
     @UpdateTimestamp
     private LocalDateTime updatedOn;
+
+    @OneToMany(mappedBy = "club", cascade = CascadeType.REMOVE)
+    private List<Event> events = new ArrayList<>();
 
 }
