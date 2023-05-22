@@ -1,5 +1,6 @@
 package com.testehan.SpringMVCExperiments.dto;
 
+import com.testehan.SpringMVCExperiments.model.UserEntity;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.Builder;
 import lombok.Data;
@@ -22,4 +23,6 @@ public class ClubDTO {
     private LocalDateTime updatedOn;
 
     private List<EventDTO> events;
+
+    private UserEntity createdByUser;
 }

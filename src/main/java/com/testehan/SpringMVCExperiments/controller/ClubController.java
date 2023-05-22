@@ -2,7 +2,10 @@ package com.testehan.SpringMVCExperiments.controller;
 
 import com.testehan.SpringMVCExperiments.dto.ClubDTO;
 import com.testehan.SpringMVCExperiments.model.Club;
+import com.testehan.SpringMVCExperiments.model.UserEntity;
+import com.testehan.SpringMVCExperiments.security.SecurityUtil;
 import com.testehan.SpringMVCExperiments.service.ClubService;
+import com.testehan.SpringMVCExperiments.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -16,16 +19,26 @@ import java.util.List;
 public class ClubController {
 
     private final ClubService  clubService;
+    private final UserService userService;
 
     @Autowired
-    public ClubController(ClubService clubService){
+    public ClubController(ClubService clubService, UserService userService){
+
         this.clubService = clubService;
+        this.userService = userService;
     }
 
     @GetMapping("/clubs")
     public String getClubs(Model model)
     {
+        UserEntity userEntity = new UserEntity();
         List<ClubDTO> clubs = clubService.findAllClubs();
+        String userName = SecurityUtil.getSessionUser();
+        if (userName !=null){
+            userEntity = userService.findByEmail(userName);
+        }
+
+        model.addAttribute("user",userEntity);
         model.addAttribute("clubs",clubs);
         return "clubs-list";
     }
@@ -60,8 +73,14 @@ public class ClubController {
 
     @GetMapping("/clubs/{clubId}")
     public String clubDetail(@PathVariable("clubId") long clubId, Model model) {
+        UserEntity userEntity = new UserEntity();
         ClubDTO clubDto = clubService.findClubById(clubId);
+        String userName = SecurityUtil.getSessionUser();
+        if (userName !=null){
+            userEntity = userService.findByEmail(userName);
+        }
 
+        model.addAttribute("user",userEntity);
         model.addAttribute("club", clubDto);
         return "clubs-detail";
     }

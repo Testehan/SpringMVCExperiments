@@ -32,9 +32,9 @@
                         <p class="card-text" th:text="${event.startTime}"></p>
                         End time:
                         <p class="card-text" th:text="${event.endTime}"></p>
-<!--                        <div th:if="${user.id} == ${event.club.createdBy.id}">-->
-                        <a class="btn btn-danger" th:href="@{/events/{eventId}/delete(eventId=${event.id})}">Delete</a>
-<!--                        </div>-->
+                        <div th:if="${user.id} == ${event.club.createdByUser.id}">
+                            <a class="btn btn-danger" th:href="@{/events/{eventId}/delete(eventId=${event.id})}">Delete</a>
+                        </div>
                     </div>
                 </div>
                 <!-- Side widgets-->

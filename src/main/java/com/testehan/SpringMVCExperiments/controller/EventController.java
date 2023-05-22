@@ -2,7 +2,10 @@ package com.testehan.SpringMVCExperiments.controller;
 
 import com.testehan.SpringMVCExperiments.dto.EventDTO;
 import com.testehan.SpringMVCExperiments.model.Event;
+import com.testehan.SpringMVCExperiments.model.UserEntity;
+import com.testehan.SpringMVCExperiments.security.SecurityUtil;
 import com.testehan.SpringMVCExperiments.service.EventService;
+import com.testehan.SpringMVCExperiments.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -19,17 +22,27 @@ import java.util.List;
 public class EventController {
 
     private final EventService eventService;
+    private final UserService userService;
 
     @Autowired
-    public EventController(EventService eventService){
+    public EventController(EventService eventService, UserService userService){
+
         this.eventService = eventService;
+        this.userService = userService;
     }
 
     @GetMapping("/events")
     public String getEventList(Model model)
     {
+        UserEntity userEntity = new UserEntity();
         List<EventDTO> eventDTOList = eventService.findAllEvents();
 
+        String userName = SecurityUtil.getSessionUser();
+        if (userName !=null){
+            userEntity = userService.findByEmail(userName);
+        }
+
+        model.addAttribute("user",userEntity);
         model.addAttribute("events",eventDTOList);
 
         return "events-list";
@@ -37,7 +50,7 @@ public class EventController {
 
     @GetMapping("/events/{clubId}/new")
     public String getEventForm(@PathVariable("clubId") Long clubId, Model model)
-    {
+    { // todo not working for some reason because of security stuff..idk..even if logged it..it does not reach this..
         Event event = new Event();
         model.addAttribute("clubId",clubId);
         model.addAttribute("event",event);
@@ -47,10 +60,19 @@ public class EventController {
     @GetMapping("/events/{eventId}")
     public String getEventDetails(@PathVariable("eventId") Long eventId, Model model)
     {
-        EventDTO eventDTO = eventService.findById(eventId);
-        model.addAttribute("event",eventDTO);
-
+        UserEntity user = new UserEntity();
+        EventDTO eventDto = eventService.findById(eventId);
+        String username = SecurityUtil.getSessionUser();
+        if(username != null) {
+            user = userService.findByEmail(username);
+        } else {
+            user.setId(-100L); // because othewise it is null and we get into problems in template generation
+        }
+        model.addAttribute("club", eventDto.getClub());
+        model.addAttribute("user", user);
+        model.addAttribute("event", eventDto);
         return "events-detail";
+
     }
 
     @PostMapping("/events/{clubId}")
