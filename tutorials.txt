@@ -1,0 +1,13 @@
+You can access the app at http://localhost:8080/clubs
+
+The databse for the app is "SpringMVC" from locally installed Postgres DB.
+
+you can register a new user, or login with an existing one like
+    user    "test"
+    pass    "test"
+
+users can create their own running clubs, for which they can also create events.
+other users can only see clubs/events created by the initial user.
+
+
+the html/css structure was obtained from https://startbootstrap.com/themes/business-corporate
