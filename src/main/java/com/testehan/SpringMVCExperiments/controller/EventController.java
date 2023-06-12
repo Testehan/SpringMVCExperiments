@@ -50,7 +50,7 @@ public class EventController {
 
     @GetMapping("/events/{clubId}/new")
     public String getEventForm(@PathVariable("clubId") Long clubId, Model model)
-    { // todo not working for some reason because of security stuff..idk..even if logged it..it does not reach this..
+    {
         Event event = new Event();
         model.addAttribute("clubId",clubId);
         model.addAttribute("event",event);
